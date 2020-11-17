@@ -30,15 +30,15 @@ ENTRYPOINT systemctl restart sshd
 #install_apache
 RUN yum install httpd -y
 ENTRYPOINT	systemctl start httpd;\
-			systemctl enable httpd
+		systemctl enable httpd
 			
 #install_firewall
 RUN	yum install firewalld -y
 ENTRYPOINT	systemctl start firewalld;\
-			systemctl enable firewalld;\
-			firewall-cmd --permanent --add-port=80/tcp;\
-			firewall-cmd --permanent --add-port=443/tcp;\
-			firewall-cmd --reload
+		systemctl enable firewalld;\
+		firewall-cmd --permanent --add-port=80/tcp;\
+		firewall-cmd --permanent --add-port=443/tcp;\
+		firewall-cmd --reload
 			
 #install_mysql
 USER root
@@ -48,22 +48,22 @@ RUN /bin/bash -c 'chmod 777 mysql57-community-release-el7-9.noarch.rpm'
 RUN rpm -ivh mysql57-community-release-el7-9.noarch.rpm
 RUN yum install mysql-server -y
 ENTRYPOINT 	systemctl start mysqld;\
-			systemctl enable mysqld
+		systemctl enable mysqld
 
 #install_php
 RUN yum install epel-release -y;\ 
-	yum install utils -y;\
-	yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm ;\
-	yum-config-manager --enable remi-php73;\
-	yum -y install php;\ 
-	yum -y install php-common ;\
-	yum -y install php-opcache ;\
-	yum -y install php-mcrypt ;\
-	yum -y install php-cli ;\
-	yum -y install php-gd ;\
-	yum -y install php-curl ;\
-	yum -y install php-mysqlnd;\
-	php -v
+    yum install utils -y;\
+    yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm ;\
+    yum-config-manager --enable remi-php73;\
+    yum -y install php;\ 
+    yum -y install php-common ;\
+    yum -y install php-opcache ;\
+    yum -y install php-mcrypt ;\
+    yum -y install php-cli ;\
+    yum -y install php-gd ;\
+    yum -y install php-curl ;\
+    yum -y install php-mysqlnd;\
+    php -v
 
 #install_oracle_RPMs
 COPY oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm /root/packages
@@ -71,16 +71,16 @@ COPY oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm /root/packages
 COPY oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm /root/packages
 
 RUN rpm -ivh oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm ;\
-	rpm -ivh oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm ;\
-	rpm -ivh oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm ;\
-	ORACLE_HOME=/usr/lib/oracle/12.1/client64; export ORACLE_HOME ;\
-	LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib; export LD_LIBRARY_PATH ;\
-	yum install alien -y;\
-	yum install php-pear -y ;\
-	yum install php-devel -y ;\
-	pecl channel-update pecl.php.net ;\
-	yum install systemtap-sdt-devel -y ;\
-	export PHP_DTRACE=yes ;\
-	pecl install oci8 -y
+    rpm -ivh oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm ;\
+    rpm -ivh oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm ;\
+    ORACLE_HOME=/usr/lib/oracle/12.1/client64; export ORACLE_HOME ;\
+    LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib; export LD_LIBRARY_PATH ;\
+    yum install alien -y;\
+    yum install php-pear -y ;\
+    yum install php-devel -y ;\
+    pecl channel-update pecl.php.net ;\
+    yum install systemtap-sdt-devel -y ;\
+    export PHP_DTRACE=yes ;\
+    pecl install oci8 -y
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
