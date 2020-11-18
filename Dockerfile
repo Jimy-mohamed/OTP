@@ -54,16 +54,16 @@ ENTRYPOINT 	systemctl start mysqld;\
 RUN yum install epel-release -y;\ 
     yum install utils -y;\
     yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm ;\
-    yum-config-manager --enable remi-php73;\
-    yum -y install php;\ 
+    yum-config-manager --enable remi-php73 ;\
+    yum -y install php ;\
     yum -y install php-common ;\
     yum -y install php-opcache ;\
     yum -y install php-mcrypt ;\
     yum -y install php-cli ;\
     yum -y install php-gd ;\
     yum -y install php-curl ;\
-    yum -y install php-mysqlnd;\
-    php -v
+    yum -y install php-mysqlnd ;\
+    php -vs
 
 #install_oracle_RPMs
 COPY oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm /root/packages
@@ -80,7 +80,13 @@ RUN rpm -ivh oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm ;\
     yum install php-devel -y ;\
     pecl channel-update pecl.php.net ;\
     yum install systemtap-sdt-devel -y ;\
-    export PHP_DTRACE=yes ;\
-    pecl install oci8 -y
+    export PHP_DTRACE=yes
+WORKDIR	/usr/local/src
+COPY oci8-2.1.3.tgz /usr/local/src
+RUN tar zxvf oci8-2.1.3.tgz
+WORKDIR /usr/local/src/oci8-2.1.3
+RUN phpize ;\
+    ./configure -with-oci8=shared,instantclient,/usr/lib/oracle/12.1/client64/lib/ ;\
+    make install
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
